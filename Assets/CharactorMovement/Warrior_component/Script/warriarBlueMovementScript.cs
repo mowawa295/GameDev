@@ -5,13 +5,13 @@ public class warriarBlueMovementScript : MonoBehaviour
     [SerializeField] Rigidbody2D rb;//リジッド
     [SerializeField] Animator animator;
     [SerializeField] float speed = 5f;
-    [Header("Attack Settings"),Tooltip(""),SerializeField] 
+    [Header("Attack Settings"),Tooltip("当たり判定オブジェクトの参照"),SerializeField] 
     public Transform attackPoint;
     public float attackRadius;
     public LayerMask enemyLayer;
     //player statas
     public int maxHealth = 100;
-    private int playerAttackDamage = 2;
+    public int playerAttackDamage = 2;
     //
 
     void Start()
