@@ -1,26 +1,21 @@
 using UnityEngine;
 
-public class enemy : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
-    warriarBlueMovementScript warriarBlueMovementScript;
+    public float enemyMaxHealth = 50f;
+    public void TakeDamage(int damage)// ダメージ量(damage)を引数として受け取るように変更
 
-    public float speed = 5f; // Enemy movement speed
-    public float enemyMaxHealth = 50f; // Enemy maximum health
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
     {
+        enemyMaxHealth -= damage;
+        Debug.Log("敵に " + damage + " ダメージ！ 残りHP: " + enemyMaxHealth);
+        if (enemyMaxHealth <= 0)        // 体力が0以下になったら消滅
+        {
+            Die();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void Die()
     {
-        
-    }
-
-    void TakeDamage()
-    {
-        enemyMaxHealth -= warriarBlueMovementScript.playerAttackDamage;
-
+        Destroy(gameObject);
     }
 }

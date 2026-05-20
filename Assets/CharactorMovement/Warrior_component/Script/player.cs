@@ -1,18 +1,18 @@
 using UnityEngine;
 
-public class warriarBlueMovementScript : MonoBehaviour
+public class player : MonoBehaviour
 {
     [SerializeField] Rigidbody2D rb;//リジッド
     [SerializeField] Animator animator;
-    [SerializeField] float speed = 5f;
-    [Header("Attack Settings"),Tooltip("当たり判定オブジェクトの参照"),SerializeField] 
+    [Header("Attack Settings"),Tooltip("当たり判定オブジェクト参照"),SerializeField] 
     public Transform attackPoint;
     public float attackRadius;
     public LayerMask enemyLayer;
-    //player statas
-    public int maxHealth = 100;
-    public int playerAttackDamage = 2;
-    //
+
+    public int maxHealth = 100;    //player statas
+    public int playerAttackDamage = 10;
+    public float speed = 5f;
+    Enemy enemyScript;//敵のスクリプトへの参照
 
     void Start()
     {
@@ -20,9 +20,9 @@ public class warriarBlueMovementScript : MonoBehaviour
         if (animator == null) animator = GetComponent<Animator>();
     }
 
-    void Update()
+    void Update() 
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             animator.SetBool("Attack", true);
             Attack();
@@ -34,17 +34,8 @@ public class warriarBlueMovementScript : MonoBehaviour
 
         HandleMovement();
     }
-    private void OnCollisionEnter2D(Collision2D collision)//この関数は、プレイヤーが敵と衝突したときに呼び出されます。衝突したオブジェクトが敵であれば、プレイヤーの体力を減らす処理を行います。
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
 
-            // 敵と衝突した場合の処理
-            // 例: プレイヤーの体力を減らす
-        }
-    }
-
-    void HandleMovement()
+    void HandleMovement() //移動処理
     {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
@@ -67,17 +58,15 @@ public class warriarBlueMovementScript : MonoBehaviour
         animator.SetFloat("Speed", currentSpeed);
     }
 
-    void Attack()
+    void Attack() //攻撃処理
     {
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius, enemyLayer);
 
-        foreach (Collider2D enemy in hitEnemies)
+        foreach (Collider2D enemy in hitEnemies) //攻撃範囲内の敵を全て取得
         {
-            Debug.Log(enemy.gameObject.name + " に当たった！");
-            // ここで敵にダメージを与える処理を追加
-            //EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();    
+             enemy.GetComponent<Enemy>().TakeDamage(playerAttackDamage);//相手のTakeDamageメソッドを呼び、自分の攻撃力を渡す
         }
-    }
+    }      
 
     private void OnDrawGizmosSelected()
     {
